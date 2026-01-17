@@ -1,7 +1,7 @@
 {
-  "name": "nodejs",
+  "name": "minha-aplicacao",
   "version": "1.0.0",
-  "description": "Este é um package.json para um projeto Node.js básico.",
+  "description": "Esta é uma aplicacao que fiz em node",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,6 +14,7 @@
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "mongodb": "^5.9.2",
     "mongoose": "^9.1.3"
   }
 }

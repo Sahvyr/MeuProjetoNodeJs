@@ -1,9 +1,13 @@
 const express = require("express");
 const app = express();
-const contatosRouter = require("./routes/contatos.js");
+const contatosRoutes = require("./routes/contatos.js");
+const pokemonsRoutes = require("./routes/pokemons.js");
 
-app.use("/contatos", contatosRouter);
-app.use("/contatos/:id", contatosRouter);
+app.use("/pokemon", pokemonsRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Api rodando! Coloque as rotas corretamente");
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
