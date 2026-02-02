@@ -55,4 +55,44 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const pokemon = req.body;
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("thiago_db");
+    const resultado = await db
+      .collection("Pokemons")
+      .updateOne({ _id: new ObjectId(id) }, { $set: pokemon });
+    if (resultado.matchedCount === 0) {
+      return res.status(404).json({ error: "Pokémon não encontrado" });
+    }
+    res.json({ message: "Pokémon atualizado com sucesso" });
+  } catch (err) {
+    console.error("Erro ao atualizar pokémon:", err);
+    res.status(500).json({ error: "Erro ao atualizar pokémon" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const client = await clientPromise;
+    const db = client.db("thiago_db");
+
+    const resultado = await db
+      .collection("Pokemons")
+      .deleteOne({ _id: new ObjectId(id) });
+
+    if (resultado.deletedCount === 0) {
+      return res.status(404).json({ error: "Pokémon não encontrado" });
+    }
+    res.json({ message: "Pokémon deletado com sucesso" });
+  } catch (err) {
+    console.error("Erro ao deletar pokémon:", err);
+    res.status(500).json({ error: "Erro ao deletar pokémon" });
+  }
+});
+
 module.exports = router;

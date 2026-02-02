@@ -3,6 +3,8 @@ const app = express();
 const contatosRoutes = require("./routes/contatos.js");
 const pokemonsRoutes = require("./routes/pokemons.js");
 
+app.use(express.json());
+
 app.use("/pokemon", pokemonsRoutes);
 
 app.get("/", (req, res) => {
