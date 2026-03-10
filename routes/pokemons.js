@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const clientPromise = require("../banco-de-dados/config");
+const clientPromise = require("../config/config");
 const { ObjectId } = require("mongodb");
 
 router.get("/", async (req, res) => {
@@ -12,6 +12,36 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error("Erro ao buscar pokemons:", err);
     res.status(500).json({ error: "Erro ao buscar pokemons" });
+  }
+});
+
+router.get("/download/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("thiago_db");
+
+    const pokemon = await db
+      .collection("Pokemons")
+      .findOne({ _id: new ObjectId(id) });
+    if (!pokemon) {
+      return res.status(404).json({ error: "Pokémon não encontrado" });
+    }
+
+    const conteudo = `Nome:${pokemon.name} , Tipo:${pokemon.types}, Estágio de evolução:${pokemon.evolution_stage} `;
+
+    res.setHeader("Content-Disposition", "attachment; filename=exemplo.txt");
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+
+    res.send(conteudo);
+  } catch (err) {
+    console.error("Erro ao buscar pokémon:", err);
+    res.status(500).json({ error: "Erro ao buscar pokémon" });
   }
 });
 

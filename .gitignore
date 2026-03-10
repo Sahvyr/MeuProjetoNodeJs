@@ -1,0 +1,31 @@
+# node modules
+node_modules/
+
+# environment variables
+.env
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# sistema operacional
+.DS_Store
+Thumbs.db
+
+# arquivos temporários
+temp/
+tmp/
+
+# coverage (testes)
+coverage/
+
+# build
+dist/
+build/
+
+# vscode
+.vscode/
+
+# exemplos locais
+examples/
