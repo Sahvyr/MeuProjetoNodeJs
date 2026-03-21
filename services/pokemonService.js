@@ -1,16 +1,61 @@
-let pokemons=[];
+const clientPromise = require("../config/config");
+const Pokemon = require("../models/pokemonModel");
 
-exports.getPokemon = () => {
-    return pokemons;
+const { ObjectId } = require("mongodb");
+
+exports.getPokemon = async () => {
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  return db.collection("Pokemons").find({}).toArray();
 };
 
-exports.createPokemon = (data) => {
-   const newPokemon = {
-    id: pokemons.length + 1,
-    name: data.name,
-    types: data.types,
-    evolution_stage: data.evolution_stage
-   };
-   pokemons.push(newPokemon);
-   return newPokemon;
-}
+exports.getPokemonById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error("ID inválido");
+  }
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  return db.collection("Pokemons").findOne({ _id: new ObjectId(id) });
+};
+
+exports.createPokemon = async (pokemonData) => {
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  const pokemon = new Pokemon(pokemonData);
+
+  return db.collection("Pokemons").insertOne(pokemon);
+};
+
+exports.deletePokemon = async (id) => {
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  return db.collection("Pokemons").deleteOne({ _id: new ObjectId(id) });
+};
+
+exports.downloadPokemon = async (id) => {
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  const pokemon = await db
+    .collection("Pokemons")
+    .findOne({ _id: new ObjectId(id) });
+  if (!pokemon) {
+    throw new Error("Pokémon não encontrado");
+  }
+  return pokemon;
+};
+
+exports.updatePokemon = async (id, pokemonData) => {
+  const client = await clientPromise;
+  const db = client.db("thiago_db");
+
+  const pokemon = new Pokemon(pokemonData);
+
+  return db
+    .collection("Pokemons")
+    .updateOne({ _id: new ObjectId(id) }, { $set: pokemon });
+};
